@@ -1,0 +1,14 @@
+{% if data|length > 0 %}
+    <b>Issues Assigned</b>
+    {% for key,value in data %}
+    <hr>
+    <strong><b>Title :</b> </strong>{{ value.title }} </br>
+    <strong><b>Description :</b></strong> {{ value.description }} </br>
+    <hr>
+    {% endfor %}
+{% else %}
+    <b>No Issues Assigned</b>
+{% endif %}
+
+
+

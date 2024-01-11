@@ -1,0 +1,36 @@
+<?php
+
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_theme().
+ * Current user assigned issues block and custom template to view those issues
+ */
+function issue_tracking_system_theme() {
+    return [
+      'issue_tracker' => [
+        'variables' => [
+          'data' => [],
+        ],
+      ],
+    ];
+  }
+
+
+/**
+ * Implements hook_help().
+ * Module help for the issue_tracking_system module.
+ */
+function issue_tracking_system_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    case 'help.page.issue_tracking_system':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('Issue Tracking Sytem') . '</p>';
+      $output .= '<p>' . t('This module creates the content type "Issue" that can we used to assign and create new issues.') . '</p>';
+      $output .= '<p>' . t('This Module also imports a block that shows the current user assigned issues. To add the block go to the block layout settings and configure the region needed to show that block.') . '</p>';
+      return $output;
+
+    default:
+  }
+}

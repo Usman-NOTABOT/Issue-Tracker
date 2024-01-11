@@ -1,0 +1,5 @@
+name: Issue Tracking System
+description: A module to create, assign and keep track of issues.
+type: module
+package: Custom
+core_version_requirement: ^8 || ^9 || ^10

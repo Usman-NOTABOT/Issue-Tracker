@@ -1,0 +1,83 @@
+<?php
+
+use Drupal\taxonomy\Entity\Term;
+use Drupal\taxonomy\Entity\Vocabulary;
+
+/**
+ * Implements hook_install().
+ *
+ * Perform initialization when the module is installs
+ */
+
+function issue_tracking_system_install()
+{
+    $vidArray = [
+        "priority" => "Priority",
+        "issue_type" => "Issue Type",
+        "status" => "Status",
+    ];
+
+    //Auto Create Taxonomy Vocabulary
+    createVocab($vidArray);
+}
+
+/**
+ * Create Taxonomy and its terms
+ */
+function createVocab($vidArray)
+{
+    if ($vidArray) {
+        foreach ($vidArray as $vid => $name) {
+            //Create taxonomy if not already exists and add terms
+            $vocabulary = Vocabulary::load($vid);
+            if (empty($vocabulary)) {
+                $vocabulary = Vocabulary::create([
+                    "vid" => $vid,
+                    "name" => $name,
+                ]);
+                $vocabulary->description = t('abcdcdc');
+                $vocabulary->save();
+                createTerms($vid);
+            } else {
+            //Add terms to existing taxonomy
+                createTerms($vid);
+            }
+        }
+    }
+}
+
+/**
+ * Populates Taxonomy Terms
+ */
+function createTerms($vid)
+{
+    switch ($vid) {
+        case "priority":
+            $categories = ["Critical", "High", "Low", "Trivial"];
+            break;
+        case "issue_type":
+            $categories = ["New feature", "Change", "Task", "Bug", "Improvement"];
+            break;
+        case "status":
+            $categories = ["To Do", "In Progress", "In Review", "Done"];
+            break;
+        default:
+    }
+
+    foreach ($categories as $category) {
+        //Check if Exists already
+        $term = \Drupal::entityTypeManager()->getStorage('taxonomy_term')
+        ->loadByProperties(['name' => $category, 'vid' => $vid]);
+        $term = reset($term);
+        //Create New Term if it does not exist already
+        if(empty($term)){
+          $term = \Drupal::entityTypeManager()
+          ->getStorage("taxonomy_term")
+          ->create([
+              "name" => $category,
+              "vid" => $vid,
+          ])
+          ->save();
+        }        
+    }
+}
